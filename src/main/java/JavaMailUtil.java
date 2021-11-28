@@ -59,7 +59,7 @@ public class JavaMailUtil {
     static final String myAccountEmail = "post.dove.22@hotmail.com";
     static final String password = "Impostdove22";
 
-    public static void sendEmail() throws MessagingException {
+     public static void sendEmail() throws MessagingException {
         Properties properties = new Properties();
 
         properties.put("mail.smtp.auth", "true");
