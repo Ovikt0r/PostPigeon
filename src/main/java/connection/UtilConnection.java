@@ -24,7 +24,7 @@ public class UtilConnection {
         }
         catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
-            log.info("Connection ERROR!");
+            log.error("Connection ERROR!");
         }
         return connection;
     }

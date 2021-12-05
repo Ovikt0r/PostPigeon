@@ -2,8 +2,9 @@ package entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class Recipient {
 
     private int id;
@@ -12,14 +13,4 @@ public class Recipient {
     private String surname;
     private String patronymic;
 
-    @Override
-    public String toString() {
-        return "entity.Recipient {" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                "}\n";
     }
-}

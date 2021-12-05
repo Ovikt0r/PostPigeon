@@ -107,57 +107,47 @@ public class RecipientDaoTest {
     @Test
     public void update() throws SQLException {
 
-
-
             RecipientDao recipientDAO = new RecipientDao();
-            Recipient recipient1;
-            Recipient recipient2 = new Recipient();
-            Recipient recipient3;
+            Recipient recipient1 = new Recipient();
+            Recipient recipient2;
 
-            recipient2.setId(5);
-            recipient2.setEmail("jooma@gamil.com");
-            recipient2.setName("Eliut");
-            recipient2.setSurname("Kepchoge");
-            recipient2.setPatronymic("Valerians");
-            recipientDAO.add(recipient2);
-
-            recipient1 = recipient2;
+            recipient1.setId(5);
+            recipient1.setEmail("jooma@gamil.com");
+            recipient1.setName("Eliut");
+            recipient1.setSurname("Kepchoge");
+            recipient1.setPatronymic("Valerians");
+            recipientDAO.add(recipient1);
             assertEquals("Eliut", recipient1.getName());
 
-            recipient2.setName("Oskar");
-            recipientDAO.update(recipient2);
-            recipient3 = recipientDAO.getById(5L);
-
-            assertEquals("Oskar", recipient3.getName());
+            recipient1.setName("Oskar");
+            recipientDAO.update(recipient1);
+            recipient2 = recipientDAO.getById(5L);
+            assertEquals("Oskar", recipient2.getName());
         }
 
     @Test
     public void remove() throws SQLException {
 
         RecipientDao recipientDAO = new RecipientDao();
-        Recipient recipient1 = new Recipient();
-        Recipient recipient2;
+        Recipient recipient = new Recipient();
 
-        recipient1.setId(5);
-        recipient1.setEmail("jooma@gamil.com");
-        recipient1.setName("Eliut");
-        recipient1.setSurname("Kepchoge");
-        recipient1.setPatronymic("Valerians");
+        recipient.setId(5);
+        recipient.setEmail("jooma@gamil.com");
+        recipient.setName("Eliut");
+        recipient.setSurname("Kepchoge");
+        recipient.setPatronymic("Valerians");
 
-        recipientDAO.add(recipient1);
+        recipientDAO.add(recipient);
+        recipient = recipientDAO.getById(5L);
 
-        recipient2 = recipientDAO.getById(5L);
+        assertEquals(5, recipient.getId());
+        assertEquals("jooma@gamil.com", recipient.getEmail());
+        assertEquals("Eliut", recipient.getName());
+        assertEquals("Kepchoge", recipient.getSurname());
+        assertEquals("Valerians", recipient.getPatronymic());
 
-        assertEquals(5, recipient2.getId());
-        assertEquals("jooma@gamil.com", recipient2.getEmail());
-        assertEquals("Eliut", recipient2.getName());
-        assertEquals("Kepchoge", recipient2.getSurname());
-        assertEquals("Valerians", recipient2.getPatronymic());
-
-
-        recipientDAO.remove(recipient2);
-
-        assertNull(recipientDAO.getById(6L));
+        recipientDAO.remove(recipient);
+        assertNull(recipientDAO.getById(5L));
     }
 
     @AfterEach
@@ -165,10 +155,10 @@ public class RecipientDaoTest {
         RecipientDao recipientDAO = new RecipientDao();
         Recipient recipient = recipientDAO.getById(5L);
         if (Objects.isNull(recipient)) {
-            System.out.println("CleanUp is not required");
+            log.info("CleanUp is not required");
         } else {
             recipientDAO.remove(recipient);
-            System.out.println("CleanUp 5th id was done successful");
+            log.info("CleanUp 5th id was done successful");
         }
     }
 

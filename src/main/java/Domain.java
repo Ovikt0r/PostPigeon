@@ -12,15 +12,7 @@ public class Domain {
 
         RecipientDao recipientDAO = new RecipientDao();
         Recipient recipient;
-
         recipient = recipientDAO.getById(5L);
         recipientDAO.remove(recipient);
-
-
-
-
-
-
-
     }
 }
