@@ -108,6 +108,6 @@ public class RecipientDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         }
-        log.info(id + " ID was removed successfully");
+        log.info(id + "th ID was removed successfully");
     }
 }
