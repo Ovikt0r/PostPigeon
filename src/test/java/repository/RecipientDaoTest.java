@@ -21,6 +21,7 @@ public class RecipientDaoTest {
     @BeforeEach
     void setUp() throws SQLException, NullPointerException {
 
+
         Recipient recipient1 =
                 new Recipient.Builder()
                         .withId(1)
@@ -216,6 +217,7 @@ public class RecipientDaoTest {
                 Objects.isNull(recipient6)) {
             log.info("CleanUp is not required");
         } else {
+            recipientDao.removeById(0L);
             recipientDao.removeById(1L);
             recipientDao.removeById(2L);
             recipientDao.removeById(3L);

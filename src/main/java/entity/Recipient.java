@@ -2,13 +2,12 @@ package entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@ToString
 public class Recipient {
 
     private long id;
@@ -16,6 +15,16 @@ public class Recipient {
     private String name;
     private String surname;
     private String patronymic;
+
+    @Override
+    public String toString() {
+        return  '\n' + "id: " + id +
+                " | email: " + email +
+                " | name: " + name +
+                " | surname: " + surname +
+                " | patronymic: " + patronymic +
+                " | " + '\n';
+    }
 
     public  static class Builder {
         private final Recipient newRecipient;
