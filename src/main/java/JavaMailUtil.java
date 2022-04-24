@@ -202,11 +202,12 @@ public class JavaMailUtil {
         });
 
         Recipient recipientFromTable = InputData.getRecipientFromTable();
-        Message message = prepareMessage(session, InputData.readFromConsole(recipientFromTable));
+        InputData inputFields = InputData.readFromConsole(recipientFromTable);
+        Message message = prepareMessage(session, inputFields);
         Transport.send(message);
         log.info("Message sent successfully");
-        if (recipientFromTable == null)
-            InputData.addRecipient(InputData.readFromConsole(recipientFromTable));
+        if (inputFields == null)
+            InputData.addRecipient(inputFields);
         sendAgain();
 
     }
