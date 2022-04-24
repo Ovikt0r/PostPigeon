@@ -32,7 +32,7 @@ public class RecipientDao {
 
 
     public List<Recipient> getAll() throws SQLException {
-        List<Recipient> recipientList = new TableArrayList<>();
+        List<Recipient> recipientList = new ArrayList<>();
 
         String sql = "SELECT ID, EMAIL, NAME, SURNAME, PARTONYMIC FROM RECIPIENTS";
 
