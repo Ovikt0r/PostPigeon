@@ -21,85 +21,107 @@ import java.util.regex.Pattern;
 @Setter
 class InputData {
 
+
     private String recipientEmail;
-    private String recipientName;
-    private String recipientSurname;
-    private String recipientPatronymic;
     private String theme;
     private String text;
+    static InputData inputFields = new InputData();
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     public static final Pattern VALID_RECIPIENT_NAME_REGEX =
             Pattern.compile("^[A-Z][a-z^0-9]$");
 
 
-    public static long chooseRecipient() throws SQLException {
+    public static Recipient makeChoose() throws SQLException {
         RecipientDao recipientDao = new RecipientDao();
-        log.info("This program sends email to a selected recipient. You should decide on the recipient");
-        List<Recipient> recipientDaoList = recipientDao.getAll();
-        for (Recipient r : recipientDaoList) {
-            log.info(r.toString());
-        }
-        log.info("DO you want to choose the recipient from the table ? Choose one and enter ID ");
-        log.info("DO you want to send the letter to new recipient? In this case type 'new'");
 
-            try (Scanner scanner = new Scanner(System.in)) {
-                while (true) {
-                if (scanner.hasNextLong()) {
-                    return scanner.nextLong();
+        log.info("Do you want to send the letter to recipient from table or to a new recipient ? type 'table' or 'new'");
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                String response = scanner.nextLine();
+                if (response.equalsIgnoreCase("table")) {
+                    List<Recipient> recipientDaoList = recipientDao.getAll();
+                    for (Recipient r : recipientDaoList) {
+                        log.info(r.toString());
+                    }
+                    log.info("Enter ID: ");
+                    while (true) {
+                        if (scanner.hasNextLong()) {
+                            long id = scanner.nextLong();
+                            if (id > 0 && id < recipientDaoList.size()) {
+                                return recipientDao.getById(id);
+                            } else {
+                                log.info("ID is not valid! Try again ");
+                                scanner.nextLong();
+                            }
+                        }
+                    }
+                }
+                if (response.equalsIgnoreCase("new")) {
+                    return newRecipient();
                 } else {
-                    String newRecipient = scanner.next();
-                    if (newRecipient.equalsIgnoreCase("new")) {
-                        readFromConsole(null);
-                        break;
-                    } else
-                        log.info("You input no data. Please try again");
+                    log.info("Try again! Enter 'table' or 'new'.");
                     scanner.nextLine();
                 }
             }
         }
-        return 1;
     }
 
-    public static Recipient getRecipientFromTable() throws SQLException {
+    public static Recipient newRecipient() {
+        Recipient newRecipient = new Recipient();
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            log.info("Enter recipient email: ");
+            newRecipient.setEmail(scanner.nextLine());
+            while (!isValidEmailAddress(newRecipient.getEmail())) {
+                log.info("Type email in the right format");
+                newRecipient.setEmail(scanner.nextLine());
+            }
+            log.info("Input recipient's name :");
+            newRecipient.setName(scanner.nextLine());
+            while (!isValidRecipientName(newRecipient.getName())) {
+                log.info("Type recipient's name in the right format");
+                newRecipient.setName(scanner.nextLine());
+            }
+            log.info("Input recipient's surname :");
+            newRecipient.setSurname(scanner.nextLine());
+            while (!isValidRecipientName(newRecipient.getSurname())) {
+                log.info("Type recipient's surname in the right format");
+                newRecipient.setSurname(scanner.nextLine());
+            }
+            log.info("Input recipient's patronymic :");
+            newRecipient.setPatronymic(scanner.nextLine());
+            while (!isValidRecipientName(newRecipient.getPatronymic())) {
+                log.info("Type recipient's patronymic in the right format");
+                newRecipient.setPatronymic(scanner.nextLine());
+            }
+        }
+        return newRecipient;
+    }
+
+    public static InputData readFromConsole(Recipient recipient ) throws SQLException, NoSuchElementException {
         RecipientDao recipientDao = new RecipientDao();
-        Recipient recipient;
+        List<Recipient> recipientDaoList = recipientDao.getAll();
 
-        recipient = recipientDao.getById(chooseRecipient());
-        return recipient;
+
+        if (recipient.getId() > 0 && recipient.getId() < recipientDaoList.size()) {
+            log.info("You're going to send a letter to " + recipient.getEmail());
+            inputFields.setRecipientEmail(recipient.getEmail());
+            return writeEmail();
+        }
+        if (recipient.getId() == 0) {
+            recipient.setId(recipientDaoList.size() + 1);
+            inputFields.setRecipientEmail(recipient.getEmail());
+            return writeEmail();
+        }
+
+        return null;
     }
 
-    public static InputData readFromConsole(Recipient recipient) throws SQLException, NoSuchElementException {
+    public static InputData writeEmail() {
 
-        InputData inputFields = new InputData();
-
-        if (recipient == null) {
-            try (Scanner scanner = new Scanner(System.in)) {
-                log.info("Input recipient's email :");
-                inputFields.setRecipientEmail(scanner.nextLine());
-                while (!isValidEmailAddress(inputFields.getRecipientEmail())) {
-                    log.info("Type email in the right format");
-                    inputFields.setRecipientEmail(scanner.nextLine());
-                }
-                log.info("Input recipient's name :");
-                inputFields.setRecipientName(scanner.nextLine());
-                while (!isValidRecipientName(inputFields.getRecipientEmail())) {
-                    log.info("Type recipient's name in the right format");
-                    inputFields.setRecipientName(scanner.nextLine());
-                }
-                log.info("Input recipient's surname :");
-                inputFields.setRecipientSurname(scanner.nextLine());
-                while (!isValidRecipientName(inputFields.getRecipientSurname())) {
-                    log.info("Type recipient's surname in the right format");
-                    inputFields.setRecipientSurname(scanner.nextLine());
-                }
-                log.info("Input recipient's patronymic :");
-                inputFields.setRecipientPatronymic(scanner.nextLine());
-                while (!isValidRecipientName(inputFields.getRecipientPatronymic())) {
-                    log.info("Type recipient's patronymic in the right format");
-                    inputFields.setRecipientPatronymic(scanner.nextLine());
-                }
-
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (scanner.hasNextLine()) {
                 log.info("Theme of the letter:");
                 inputFields.setTheme(scanner.nextLine());
 
@@ -107,57 +129,25 @@ class InputData {
                 inputFields.setText(scanner.nextLine());
 
             }
-        } else if (recipient != null) {
-            log.info("Do you want to send the letter to " + recipient.getEmail() + "? yes/no");
-            try (Scanner scanner = new Scanner(System.in)) {
-                while (true) {
-                    if (scanner.hasNext()) {
-                        String s = scanner.nextLine();
-                        if (s.equalsIgnoreCase("yes")) {
-                            inputFields.setRecipientEmail(recipient.getEmail());
-                            inputFields.setRecipientName(recipient.getName());
-                            inputFields.setRecipientSurname(recipient.getSurname());
-                            inputFields.setRecipientPatronymic(recipient.getPatronymic());
-                            return inputFields;
-                        }
-
-                        if (s.equalsIgnoreCase("no")) {
-                            chooseRecipient();
-                            break;
-                        } else {
-                            log.info("Make the right choice !");
-                            log.info("Type 'Yes' or 'No'");
-                            scanner.nextLine();
-                        }
-                    }
-                }
-            }
-
-
         }
-
-        return null;
+        return inputFields;
     }
 
-    public static void addRecipient(InputData inputField) throws SQLException {
+    public static void addRecipient(Recipient newRecipient) throws SQLException {
         RecipientDao recipientDao = new RecipientDao();
-        List<Recipient> recipientList = recipientDao.getAll();
-        Recipient recipient = new Recipient();
+
         log.info("Do you want to add new recipient to the table ? yes/no");
         try (Scanner scanner = new Scanner(System.in)) {
             String s = scanner.nextLine();
             while (true) {
                 if (s.equalsIgnoreCase("yes")) {
-                    recipient.setId(recipientList.size() + 1);
-                    recipient.setEmail(inputField.getRecipientEmail());
-                    recipient.setName(inputField.getRecipientName());
-                    recipient.setSurname(inputField.getRecipientSurname());
-                    recipient.setPatronymic(inputField.getRecipientPatronymic());
-                    recipientDao.add(recipient);
-                    break;
+                    recipientDao.add(newRecipient);
                 }
                 if (s.equalsIgnoreCase("no")) {
                     break;
+                } else {
+                    log.info("Try again! Enter 'yes' or 'no'");
+                    scanner.nextLine();
                 }
             }
 
@@ -178,6 +168,7 @@ class InputData {
 
 
 }
+
 
 @Slf4j
 public class JavaMailUtil {
@@ -201,13 +192,12 @@ public class JavaMailUtil {
             }
         });
 
-        Recipient recipientFromTable = InputData.getRecipientFromTable();
-        InputData inputFields = InputData.readFromConsole(recipientFromTable);
+
+        InputData inputFields = InputData.readFromConsole(InputData.makeChoose());
         Message message = prepareMessage(session, inputFields);
         Transport.send(message);
         log.info("Message sent successfully");
-        if (inputFields == null)
-            InputData.addRecipient(inputFields);
+        InputData.addRecipient(InputData.newRecipient());
         sendAgain();
 
     }
@@ -231,7 +221,7 @@ public class JavaMailUtil {
             String s = scanner.nextLine();
             while (true) {
                 if (s.equalsIgnoreCase("yes")) {
-                    InputData.chooseRecipient();
+                    InputData.makeChoose();
                     break;
                 } else if (s.equalsIgnoreCase("no")) {
                     break;
