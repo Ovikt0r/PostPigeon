@@ -1,7 +1,7 @@
-package repository;
+package com.oviktor.repository;
 
-import connection.UtilConnection;
-import entity.Recipient;
+import com.oviktor.connection.DbConnection;
+import com.oviktor.entity.Recipient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -16,7 +16,7 @@ public class RecipientDao {
 
         String sql = "INSERT INTO RECIPIENTS(ID, EMAIL, NAME, SURNAME, PARTONYMIC) VALUES (?,?,?,?,?)";
 
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, recipient.getId());
             preparedStatement.setString(2, recipient.getEmail());
@@ -24,36 +24,33 @@ public class RecipientDao {
             preparedStatement.setString(4, recipient.getSurname());
             preparedStatement.setString(5, recipient.getPatronymic());
 
-            int res = preparedStatement.executeUpdate();
-            log.info(String.valueOf(res));
-
+            preparedStatement.executeUpdate();
         }
     }
 
-
     public List<Recipient> getAll() throws SQLException {
-        List<Recipient> recipientList = new ArrayList<>();
+        List<Recipient> recipients = new ArrayList<>();
 
         String sql = "SELECT ID, EMAIL, NAME, SURNAME, PARTONYMIC FROM RECIPIENTS";
 
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
 
 
             while (resultSet.next()) {
-                Recipient recipient = new Recipient();
-                recipient.setId(resultSet.getLong("ID"));
-                recipient.setEmail(resultSet.getString("EMAIL"));
-                recipient.setName(resultSet.getString("NAME"));
-                recipient.setSurname(resultSet.getString("SURNAME"));
-                recipient.setPatronymic(resultSet.getString("PARTONYMIC"));
-
-                recipientList.add(recipient);
-
+                recipients.add(
+                        Recipient.builder()
+                                .id(resultSet.getLong("ID"))
+                                .email(resultSet.getString("EMAIL"))
+                                .name(resultSet.getString("NAME"))
+                                .surname(resultSet.getString("SURNAME"))
+                                .patronymic(resultSet.getString("PARTONYMIC"))
+                                .build()
+                );
             }
         }
-        return recipientList;
+        return recipients;
     }
 
 
@@ -61,19 +58,19 @@ public class RecipientDao {
 
         String sql = "SELECT ID, EMAIL, NAME, SURNAME, PARTONYMIC FROM RECIPIENTS WHERE ID=?";
 
-        Recipient recipient = new Recipient();
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    recipient.setId(resultSet.getInt("ID"));
-                    recipient.setEmail(resultSet.getString("EMAIL"));
-                    recipient.setName(resultSet.getString("NAME"));
-                    recipient.setSurname(resultSet.getString("SURNAME"));
-                    recipient.setPatronymic(resultSet.getString("PARTONYMIC"));
-                    return recipient;
+                    return Recipient.builder()
+                            .id(resultSet.getLong("ID"))
+                            .email(resultSet.getString("EMAIL"))
+                            .name(resultSet.getString("NAME"))
+                            .surname(resultSet.getString("SURNAME"))
+                            .patronymic(resultSet.getString("PARTONYMIC"))
+                            .build();
                 }
             }
 
@@ -81,12 +78,11 @@ public class RecipientDao {
         return null;
     }
 
-
-
     public void update(Recipient recipient) throws SQLException {
 
         String sql = "UPDATE RECIPIENTS SET NAME=? WHERE ID=?";
-        try (Connection connection = UtilConnection.getConnection();
+
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, recipient.getName());
@@ -97,12 +93,11 @@ public class RecipientDao {
 
     }
 
-
     public void removeById(Long id) throws SQLException {
 
         String sql = "DELETE FROM RECIPIENTS WHERE ID=?";
 
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);

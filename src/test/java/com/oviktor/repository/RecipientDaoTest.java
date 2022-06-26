@@ -1,6 +1,6 @@
-package repository;
+package com.oviktor.repository;
 
-import entity.Recipient;
+import com.oviktor.entity.Recipient;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 @Slf4j
@@ -20,47 +21,45 @@ public class RecipientDaoTest {
 
     @BeforeEach
     void setUp() throws SQLException, NullPointerException {
-
-
         Recipient recipient1 =
-                new Recipient.Builder()
-                        .withId(1)
-                        .withEmail("sdfdf@sdfds.com")
-                        .withName("Viktor")
-                        .withSurname("Lol")
-                        .withPatronymic("Kek")
+                Recipient.builder()
+                        .id(1L)
+                        .email("sdfdf@sdfds.com")
+                        .name("Viktor")
+                        .surname("Lol")
+                        .patronymic("Kek")
                         .build();
         Recipient recipient2 =
-                new Recipient.Builder()
-                        .withId(2)
-                        .withEmail("oiut@brt.com")
-                        .withName("Yra")
-                        .withSurname("Ret")
-                        .withPatronymic("Cot")
+                Recipient.builder()
+                        .id(2L)
+                        .email("oiut@brt.com")
+                        .name("Yra")
+                        .surname("Ret")
+                        .patronymic("Cot")
                         .build();
         Recipient recipient3 =
-                new Recipient.Builder()
-                        .withId(3)
-                        .withEmail("twat@mail.com")
-                        .withName("Taras")
-                        .withSurname("Peter")
-                        .withPatronymic("Vertep")
+                Recipient.builder()
+                        .id(3L)
+                        .email("twat@mail.com")
+                        .name("Taras")
+                        .surname("Peter")
+                        .patronymic("Vertep")
                         .build();
         Recipient recipient4 =
-                new Recipient.Builder()
-                        .withId(4)
-                        .withEmail("jonson@google.com")
-                        .withName("Vasya")
-                        .withSurname("Frolov")
-                        .withPatronymic("Petrovich")
+                Recipient.builder()
+                        .id(4L)
+                        .email("jonson@google.com")
+                        .name("Vasya")
+                        .surname("Frolov")
+                        .patronymic("Petrovich")
                         .build();
         Recipient recipient5 =
-                new Recipient.Builder()
-                        .withId(5)
-                        .withEmail("jooma@gamil.com")
-                        .withName("Eliut")
-                        .withSurname("Kepchoge")
-                        .withPatronymic("Valerians")
+                Recipient.builder()
+                        .id(5L)
+                        .email("jooma@gamil.com")
+                        .name("Eliut")
+                        .surname("Kepchoge")
+                        .patronymic("Valerians")
                         .build();
         recipientDao.add(recipient1);
         recipientDao.add(recipient2);
@@ -68,21 +67,18 @@ public class RecipientDaoTest {
         recipientDao.add(recipient4);
         recipientDao.add(recipient5);
         log.info("5 recipients were added in the table successes");
-
     }
 
     @Test
     public void add() throws SQLException {
-
-
         assertNull(recipientDao.getById(6L));
 
-        Recipient expectedRecipient = new Recipient.Builder()
-                .withId(6)
-                .withEmail("jogging@agmail.com")
-                .withName("Frida")
-                .withSurname("Karlo")
-                .withPatronymic("Stoner")
+        Recipient expectedRecipient = Recipient.builder()
+                .id(6L)
+                .email("jogging@agmail.com")
+                .name("Frida")
+                .surname("Karlo")
+                .patronymic("Stoner")
                 .build();
 
         recipientDao.add(expectedRecipient);
@@ -104,46 +100,45 @@ public class RecipientDaoTest {
 
     @Test
     public void getById() throws SQLException {
-
         Recipient expectedRecipient1 =
-                new Recipient.Builder()
-                        .withId(1)
-                        .withEmail("sdfdf@sdfds.com")
-                        .withName("Viktor")
-                        .withSurname("Lol")
-                        .withPatronymic("Kek")
+                Recipient.builder()
+                        .id(1L)
+                        .email("sdfdf@sdfds.com")
+                        .name("Viktor")
+                        .surname("Lol")
+                        .patronymic("Kek")
                         .build();
         Recipient expectedRecipient2 =
-                new Recipient.Builder()
-                        .withId(2)
-                        .withEmail("oiut@brt.com")
-                        .withName("Yra")
-                        .withSurname("Ret")
-                        .withPatronymic("Cot")
+                Recipient.builder()
+                        .id(2L)
+                        .email("oiut@brt.com")
+                        .name("Yra")
+                        .surname("Ret")
+                        .patronymic("Cot")
                         .build();
         Recipient expectedRecipient3 =
-                new Recipient.Builder()
-                        .withId(3)
-                        .withEmail("twat@mail.com")
-                        .withName("Taras")
-                        .withSurname("Peter")
-                        .withPatronymic("Vertep")
+                Recipient.builder()
+                        .id(3L)
+                        .email("twat@mail.com")
+                        .name("Taras")
+                        .surname("Peter")
+                        .patronymic("Vertep")
                         .build();
         Recipient expectedRecipient4 =
-                new Recipient.Builder()
-                        .withId(4)
-                        .withEmail("jonson@google.com")
-                        .withName("Vasya")
-                        .withSurname("Frolov")
-                        .withPatronymic("Petrovich")
+                Recipient.builder()
+                        .id(4L)
+                        .email("jonson@google.com")
+                        .name("Vasya")
+                        .surname("Frolov")
+                        .patronymic("Petrovich")
                         .build();
         Recipient expectedRecipient5 =
-                new Recipient.Builder()
-                        .withId(5)
-                        .withEmail("jooma@gamil.com")
-                        .withName("Eliut")
-                        .withSurname("Kepchoge")
-                        .withPatronymic("Valerians")
+                Recipient.builder()
+                        .id(5L)
+                        .email("jooma@gamil.com")
+                        .name("Eliut")
+                        .surname("Kepchoge")
+                        .patronymic("Valerians")
                         .build();
 
         Recipient actualRecipient1 = new RecipientDao().getById(1L);
@@ -162,14 +157,12 @@ public class RecipientDaoTest {
 
     @Test
     public void update() throws SQLException {
-
-
-        Recipient expectedRecipient = new Recipient.Builder()
-                .withId(5)
-                .withEmail("jooma@gamil.com")
-                .withName("Eliut")
-                .withSurname("Kepchoge")
-                .withPatronymic("Valerians")
+        Recipient expectedRecipient = Recipient.builder()
+                .id(5L)
+                .email("jooma@gamil.com")
+                .name("Eliut")
+                .surname("Kepchoge")
+                .patronymic("Valerians")
                 .build();
 
         Recipient actualRecipient = recipientDao.getById(5L);
@@ -183,13 +176,12 @@ public class RecipientDaoTest {
 
     @Test
     public void removeById() throws SQLException {
-
-        Recipient expectedRecipient = new Recipient.Builder()
-                .withId(5)
-                .withEmail("jooma@gamil.com")
-                .withName("Eliut")
-                .withSurname("Kepchoge")
-                .withPatronymic("Valerians")
+        Recipient expectedRecipient = Recipient.builder()
+                .id(5L)
+                .email("jooma@gamil.com")
+                .name("Eliut")
+                .surname("Kepchoge")
+                .patronymic("Valerians")
                 .build();
 
         Recipient actualRecipient = recipientDao.getById(5L);
@@ -201,7 +193,6 @@ public class RecipientDaoTest {
 
     @AfterEach
     void cleanUp() throws SQLException, NullPointerException {
-
         RecipientDao recipientDao = new RecipientDao();
         Recipient recipient1 = recipientDao.getById(1L);
         Recipient recipient2 = recipientDao.getById(2L);
@@ -226,6 +217,5 @@ public class RecipientDaoTest {
             recipientDao.removeById(6L);
             log.info("CleanUp the table was done successful");
         }
-
     }
 }
