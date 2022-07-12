@@ -1,6 +1,6 @@
 package repository;
 
-import connection.UtilConnection;
+import connection.DbConnection;
 import entity.Recipient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ public class RecipientDao {
 
         String sql = "INSERT INTO RECIPIENTS(ID, EMAIL, NAME, SURNAME, PARTONYMIC) VALUES (?,?,?,?,?)";
 
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, recipient.getId());
             preparedStatement.setString(2, recipient.getEmail());
@@ -36,7 +36,7 @@ public class RecipientDao {
 
         String sql = "SELECT ID, EMAIL, NAME, SURNAME, PARTONYMIC FROM RECIPIENTS";
 
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
 
@@ -62,7 +62,7 @@ public class RecipientDao {
         String sql = "SELECT ID, EMAIL, NAME, SURNAME, PARTONYMIC FROM RECIPIENTS WHERE ID=?";
 
         Recipient recipient = new Recipient();
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);
@@ -86,7 +86,7 @@ public class RecipientDao {
     public void update(Recipient recipient) throws SQLException {
 
         String sql = "UPDATE RECIPIENTS SET NAME=? WHERE ID=?";
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, recipient.getName());
@@ -102,7 +102,7 @@ public class RecipientDao {
 
         String sql = "DELETE FROM RECIPIENTS WHERE ID=?";
 
-        try (Connection connection = UtilConnection.getConnection();
+        try (Connection connection = DbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, id);

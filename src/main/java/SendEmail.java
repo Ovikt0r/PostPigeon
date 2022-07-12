@@ -1,4 +1,5 @@
 import lombok.extern.slf4j.Slf4j;
+import util.JavaMailUtil;
 
 import javax.mail.MessagingException;
 import java.sql.SQLException;

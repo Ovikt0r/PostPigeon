@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Slf4j
-public class UtilConnection {
+public class DbConnection {
 
 
     private static final String DB_DRIVER = "org.h2.Driver";
